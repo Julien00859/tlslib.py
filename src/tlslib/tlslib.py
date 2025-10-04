@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import re
 from abc import abstractmethod
 from collections.abc import Buffer, Callable, Sequence
 from enum import Enum, IntEnum
@@ -26,6 +27,8 @@ __all__ = [
     "PrivateKey",
     "TLSImplementation",
 ]
+
+_pem_separator_re = re.compile(br"(?<=\b-----)\s*(?=-----BEGIN )")
 
 
 class TrustStore:
@@ -140,6 +143,29 @@ class Certificate:
         be useful for implementations that rely on system certificate stores.
         """
         return cls(id=id)
+
+    @classmethod
+    def chain_from_buffer(cls, buffer: bytes) -> Sequence[Certificate]:
+        """
+        Creates a list of Certificate objects from a byte buffer. This byte
+        buffer *must* contain a series of bytes corresponding to a certificate
+        that is PEM-encoded and that begins with the standard PEM preamble (a
+        series of dashes followed by the ASCII bytes "BEGIN CERTIFICATE" and
+        another series of dashes).
+        """
+        return [cls.from_buffer(chunk) for chunk in _pem_separator_re.split(buffer)]
+
+    @classmethod
+    def chain_from_file(cls, path: os.PathLike) -> Sequence[Certificate]:
+        """
+        Creates a list of Certificate objects from a file on disk. The file on
+        disk *must* contain a series of bytes corresponding to a certificate
+        that is PEM-encoded and that begins with the standard PEM preamble (a
+        series of dashes followed by the ASCII bytes "BEGIN CERTIFICATE" and
+        another series of dashes).
+        """
+        with open(path, 'rb') as file:
+            return cls.chain_from_buffer(file.read())
 
 
 class PrivateKey:
