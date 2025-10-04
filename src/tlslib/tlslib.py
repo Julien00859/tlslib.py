@@ -179,6 +179,67 @@ class Certificate:
             return cls.chain_from_buffer(file.read())
 
 
+class PublicKey:
+    """
+    Object representing a public key found raw or stored inside a certificate.
+    """
+
+    __slots__ = (
+        "_buffer",
+        "_path",
+        "_id",
+    )
+
+    def __init__(
+        self, buffer: bytes | None = None, path: os.PathLike | None = None, id: bytes | None = None
+    ):
+        """
+        Creates a PublicKey object from a path, buffer, or ID.
+
+        If none of these is given, an exception is raised.
+        """
+
+        if buffer is None and path is None and id is None:
+            raise ValueError("PublicKey cannot be empty.")
+
+        self._buffer = buffer
+        self._path = path
+        self._id = id
+
+    @classmethod
+    def from_buffer(cls, buffer: bytes) -> PublicKey:
+        """
+        Creates a PublicKey object from a byte buffer. This byte buffer may be
+        either PEM-encoded or DER-encoded. If the buffer is PEM encoded it
+        *must* begin with the standard PEM preamble (a series of dashes
+        followed by the ASCII bytes "BEGIN", the key type, and another series
+        of dashes). In the absence of that preamble, the implementation may
+        assume that the private key is DER-encoded instead.
+        """
+        return cls(buffer=buffer)
+
+    @classmethod
+    def from_file(cls, path: os.PathLike) -> PublicKey:
+        """
+        Creates a PublicKey object from a file on disk. The file on disk
+        should contain a series of bytes corresponding to a certificate that
+        may be either PEM-encoded or DER-encoded. If the bytes are PEM encoded
+        it *must* begin with the standard PEM preamble (a series of dashes
+        followed by the ASCII bytes "BEGIN", the key type, and another series
+        of dashes). In the absence of that preamble, the implementation may
+        assume that the certificate is DER-encoded instead.
+        """
+        return cls(path=path)
+
+    @classmethod
+    def from_id(cls, id: bytes) -> PublicKey:
+        """
+        Creates a PublicKey object from an arbitrary identifier. This may be
+        useful for implementations that rely on system private key stores.
+        """
+        return cls(id=id)
+
+
 class PrivateKey:
     """Object representing a private key corresponding to a public key
     for a certificate used in TLS."""
