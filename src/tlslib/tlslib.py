@@ -75,6 +75,17 @@ class TrustStore:
         """
         Initializes a trust store from a single file containing PEMs.
         """
+        if not os.path.isfile(path):
+            raise ValueError("the path doesn't exist or is not a file")
+        return cls(path=path)
+
+    @classmethod
+    def from_dir(cls, path: os.PathLike) -> TrustStore:
+        """
+        Initializes a trust store from a directory containing PEM files.
+        """
+        if not os.path.isdir(path):
+            raise ValueError("the path doesn't exist or is not a directory")
         return cls(path=path)
 
     @classmethod
