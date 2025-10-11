@@ -7,7 +7,7 @@ import re
 from abc import abstractmethod
 from collections.abc import Buffer, Callable, Sequence
 from enum import Enum, IntEnum
-from typing import Protocol, TypeVar
+from typing import NamedTuple, Protocol, TypeVar
 
 __all__ = [
     "TLSBuffer",
@@ -976,10 +976,15 @@ class ConfigurationError(TLSError):
     configuration uses features not supported by that implementation."""
 
 
+class _Leaf(NamedTuple):
+    certificate: Certificate
+    private_key: PrivateKey | None
+
+
 class SigningChain:
     """Object representing a certificate chain used in TLS."""
 
-    leaf: tuple[Certificate, PrivateKey | None]
+    leaf: _Leaf
     chain: list[Certificate]
 
     def __init__(
@@ -988,7 +993,7 @@ class SigningChain:
         chain: Sequence[Certificate] | None = None,
     ):
         """Initializes a SigningChain object."""
-        self.leaf = leaf
+        self.leaf = _Leaf(*leaf)
         if chain is None:
             chain = []
         self.chain = list(chain)
