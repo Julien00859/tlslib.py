@@ -63,6 +63,9 @@ class TrustStore:
         """
         return cls()
 
+    def is_system(self):
+        return self._buffer is None and self._path is None and self._id is None
+
     @classmethod
     def from_buffer(cls, buffer: bytes) -> TrustStore:
         """
