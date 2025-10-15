@@ -26,6 +26,11 @@ __all__ = [
     "Certificate",
     "PrivateKey",
     "TLSImplementation",
+    "TrustStore",
+    "TLSSocket",
+    "TLSError",
+    "ConfigurationError",
+    "SigningChain",
 ]
 
 _pem_separator_re = re.compile(br"(?<=\b-----)\s*(?=-----BEGIN )")
