@@ -98,6 +98,24 @@ class TrustStore:
         """
         return cls(id=id)
 
+    def __eq__(self, other):
+        return (
+            type(self) is type(other)
+            and self._buffer == other._buffer
+            and self._path == other._path
+            and self._id == other._id
+        )
+
+    def __repr__(self):
+        cls_name = type(self).__name__
+        if self._id:
+            return f'{cls_name}(id={self._id!r})'
+        if self._path:
+            return f'{cls_name}(path={self._path!r})'
+        if self._buffer:
+            return f'{cls_name}(hash(buffer)={hash(self._buffer)})'
+        return f'{cls_name}.system()'
+
 
 class Certificate:
     """Object representing a certificate used in TLS."""
@@ -181,6 +199,24 @@ class Certificate:
         with open(path, 'rb') as file:
             return cls.chain_from_buffer(file.read())
 
+    def __eq__(self, other):
+        return (
+            type(self) is type(other)
+            and self._buffer == other._buffer
+            and self._path == other._path
+            and self._id == other._id
+        )
+
+    def __repr__(self):
+        cls_name = type(self).__name__
+        if self._id:
+            return f'{cls_name}(id={self._id!r})'
+        if self._path:
+            return f'{cls_name}(path={self._path!r})'
+        if self._buffer:
+            return f'{cls_name}(hash(buffer)={hash(self._buffer)})'
+        return f'{cls_name}(buffer=None, path=None, id=None)'
+
 
 class PublicKey:
     """
@@ -242,6 +278,24 @@ class PublicKey:
         """
         return cls(id=id)
 
+    def __eq__(self, other):
+        return (
+            type(self) is type(other)
+            and self._buffer == other._buffer
+            and self._path == other._path
+            and self._id == other._id
+        )
+
+    def __repr__(self):
+        cls_name = type(self).__name__
+        if self._id:
+            return f'{cls_name}(id={self._id!r})'
+        if self._path:
+            return f'{cls_name}(path={self._path!r})'
+        if self._buffer:
+            return f'{cls_name}(hash(buffer)={hash(self._buffer)})'
+        return f'{cls_name}(buffer=None, path=None, id=None)'
+
 
 class PrivateKey:
     """Object representing a private key corresponding to a public key
@@ -302,6 +356,24 @@ class PrivateKey:
         be useful for implementations that rely on system private key stores.
         """
         return cls(id=id)
+
+    def __eq__(self, other):
+        return (
+            type(self) is type(other)
+            and self._buffer == other._buffer
+            and self._path == other._path
+            and self._id == other._id
+        )
+
+    def __repr__(self):
+        cls_name = type(self).__name__
+        if self._id:
+            return f'{cls_name}(id={self._id!r})'
+        if self._path:
+            return f'{cls_name}(path={self._path!r})'
+        if self._buffer:
+            return f'{cls_name}(hash(buffer)={hash(self._buffer)})'
+        return f'{cls_name}(buffer=None, path=None, id=None)'
 
 
 class TLSClientConfiguration:
