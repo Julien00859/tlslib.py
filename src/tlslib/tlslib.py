@@ -427,6 +427,7 @@ class TLSClientConfiguration:
 
     def __init__(
         self,
+        *,
         certificate_chain: SigningChain | None = None,
         ciphers: Sequence[CipherSuite] | None = None,
         inner_protocols: Sequence[NextProtocol | bytes] | None = None,
@@ -545,6 +546,7 @@ class TLSServerConfiguration:
 
     def __init__(
         self,
+        *,
         certificate_chain: Sequence[SigningChain] | None = None,
         ciphers: Sequence[CipherSuite | int] | None = None,
         inner_protocols: Sequence[NextProtocol | bytes] | None = None,
