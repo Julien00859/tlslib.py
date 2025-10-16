@@ -433,7 +433,7 @@ class TLSClientConfiguration:
         inner_protocols: Sequence[NextProtocol | bytes] | None = None,
         lowest_supported_version: TLSVersion | None = None,
         highest_supported_version: TLSVersion | None = None,
-        trust_store: TrustStore | None = None,
+        trust_store: TrustStore | None,
     ) -> None:
         """Initialize TLS client configuration."""
 
